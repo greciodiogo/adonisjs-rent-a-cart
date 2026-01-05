@@ -1,0 +1,376 @@
+/**
+ * @swagger
+ * /api/admin/products/shop:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Admin
+ *     summary: Obter produtos da loja do utilizador autenticado
+ *     parameters:
+ *       - name: page
+ *         description: Número da página
+ *         in: query
+ *         type: integer
+ *       - name: limit
+ *         description: Quantidade de registos por página
+ *         in: query
+ *         type: integer
+ *       - name: search
+ *         description: Pesquisar por nome
+ *         in: query
+ *         type: string
+ *       - name: category_id
+ *         description: Filtrar por categoria
+ *         in: query
+ *         type: integer
+ *     responses:
+ *       200:
+ *         description: Lista de produtos da loja recuperada com sucesso
+ *         example:
+ *           data:
+ *             - id: 1
+ *               name: "iPhone 15"
+ *               description: "Latest iPhone model"
+ *               price: 999.99
+ *               category_id: 1
+ *       401:
+ *         description: Não autorizado
+ */
+
+/**
+ * @swagger
+ * /api/admin/shop/info:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Admin
+ *     summary: Obter informações da loja do utilizador autenticado
+ *     responses:
+ *       200:
+ *         description: Informações da loja recuperadas com sucesso
+ *         example:
+ *           data:
+ *             id: 1
+ *             name: "Minha Loja"
+ *             description: "Descrição da loja"
+ *             userId: 1
+ *       401:
+ *         description: Não autorizado
+ *       404:
+ *         description: Loja não encontrada
+ */
+
+/**
+ * @swagger
+ * /api/admin/shop/orders:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Admin
+ *     summary: Obter todas as encomendas da loja do utilizador autenticado
+ *     parameters:
+ *       - name: page
+ *         description: Número da página
+ *         in: query
+ *         type: integer
+ *       - name: limit
+ *         description: Quantidade de registos por página
+ *         in: query
+ *         type: integer
+ *       - name: search
+ *         description: Pesquisar por número de encomenda ou cliente
+ *         in: query
+ *         type: string
+ *       - name: status
+ *         description: Estado da Encomenda
+ *         in: query
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Lista de encomendas da loja recuperada com sucesso
+ *         example:
+ *           data:
+ *             - id: 1
+ *               order_number: "ORD-2024-001"
+ *               userId: 1
+ *               fullName: "João Silva"
+ *               total_amount: 199.99
+ *       401:
+ *         description: Não autorizado
+ */
+
+/**
+ * @swagger
+ * /api/admin/order/{id}/acceptOrderByShop:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Admin
+ *     summary: Aceitar encomenda pela loja
+ *     parameters:
+ *       - name: id
+ *         description: ID da encomenda
+ *         in: path
+ *         required: true
+ *         type: integer
+ *     responses:
+ *       201:
+ *         description: Encomenda aceite com sucesso
+ *         example:
+ *           data:
+ *             id: 1
+ *             status: "accepted"
+ *           message: "Pedido Aceite com sucesso"
+ *       401:
+ *         description: Não autorizado
+ *       404:
+ *         description: Encomenda não encontrada
+ */
+
+/**
+ * @swagger
+ * /api/admin/order/{id}/cancelOrderByShop:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Admin
+ *     summary: Cancelar encomenda pela loja
+ *     parameters:
+ *       - name: id
+ *         description: ID da encomenda
+ *         in: path
+ *         required: true
+ *         type: integer
+ *     responses:
+ *       201:
+ *         description: Encomenda cancelada com sucesso
+ *         example:
+ *           data:
+ *             id: 1
+ *             status: "cancelled"
+ *           message: "Pedido Cancelado com sucesso"
+ *       401:
+ *         description: Não autorizado
+ *       404:
+ *         description: Encomenda não encontrada
+ */
+
+/**
+ * @swagger
+ * /api/admin/client/orders:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Admin
+ *     summary: Listar todas as encomendas do cliente autenticado
+ *     parameters:
+ *       - name: page
+ *         description: Número da página
+ *         in: query
+ *         type: integer
+ *         default: 1
+ *       - name: perPage
+ *         description: Quantidade de registos por página
+ *         in: query
+ *         type: integer
+ *         default: 10
+ *       - name: search
+ *         description: Pesquisar por número de encomenda ou outros campos
+ *         in: query
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Lista de encomendas do cliente recuperada com sucesso
+ *       401:
+ *         description: Não autorizado
+ */
+
+/**
+ * @swagger
+ * /api/admin/shop/orders/{id}:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Admin
+ *     summary: Obter detalhes de uma encomenda específica da loja do utilizador autenticado
+ *     parameters:
+ *       - name: id
+ *         description: ID da encomenda
+ *         in: path
+ *         required: true
+ *         type: integer
+ *       - name: status
+ *         description: Estado da encomenda (PENDING, ACCEPTED, CANCELED, DELIVERED, LOADING, CONFIRMED)
+ *         in: query
+ *         type: string
+ *       - name: page
+ *         description: Número da página
+ *         in: query
+ *         type: integer
+ *         default: 1
+ *       - name: perPage
+ *         description: Quantidade de registos por página
+ *         in: query
+ *         type: integer
+ *         default: 10
+ *     responses:
+ *       200:
+ *         description: Detalhes da encomenda da loja recuperados com sucesso
+ *       401:
+ *         description: Não autorizado
+ *       404:
+ *         description: Encomenda não encontrada
+ */
+
+/**
+ * @swagger
+ * /api/shop/auth/login:
+ *   post:
+ *     tags:
+ *       - Admin
+ *     summary: Autenticar parceiro (vendedor) na área admin
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           required:
+ *             - email
+ *             - password
+ *           properties:
+ *             email:
+ *               type: string
+ *               format: email
+ *               example: partner@example.com
+ *             password:
+ *               type: string
+ *               format: password
+ *               example: "123456"
+ *     responses:
+ *       200:
+ *         description: Login de parceiro bem-sucedido
+ *       400:
+ *         description: Credenciais inválidas
+ *       404:
+ *         description: Utilizador não encontrado
+ */
+
+/**
+ * @swagger
+ * /api/admin/shop/notifications:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Admin
+ *     summary: Obter notificações da loja do utilizador autenticado
+ *     parameters:
+ *       - name: page
+ *         description: Número da página
+ *         in: query
+ *         type: integer
+ *       - name: limit
+ *         description: Quantidade de registos por página
+ *         in: query
+ *         type: integer
+ *     responses:
+ *       200:
+ *         description: Lista de notificações da loja recuperada com sucesso
+ *         example:
+ *           data:
+ *             - id: 1
+ *               title: "Novo pedido na loja"
+ *               message: "Novo pedido #123 recebido na sua loja"
+ *               type: "order"
+ *               is_read: false
+ *               created_at: "2023-01-01T12:00:00.000Z"
+ *       401:
+ *         description: Não autorizado
+ *       403:
+ *         description: Acesso negado (apenas para vendedores)
+ *       404:
+ *         description: Loja não encontrada
+ */
+
+/**
+ * @swagger
+ * /api/admin/client/info:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Admin
+ *     summary: Obter informações do cliente autenticado
+ *     description: Retorna informações detalhadas do perfil do cliente autenticado
+ *     responses:
+ *       200:
+ *         description: Informações do cliente recuperadas com sucesso
+ *         example:
+ *           data:
+ *             id: 189
+ *             firstName: "João"
+ *             lastName: "Silva"
+ *             email: "joao@example.com"
+ *             phone: "+244912345678"
+ *             role: "customer"
+ *             created_at: "2023-01-01T12:00:00.000Z"
+ *             updated_at: "2023-01-15T10:30:00.000Z"
+ *       401:
+ *         description: Não autorizado
+ *       403:
+ *         description: Acesso negado (apenas para clientes)
+ */
+
+/**
+ * @swagger
+ * /api/admin/client/notifications:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Admin
+ *     summary: Obter notificações do cliente autenticado
+ *     description: Retorna lista de todas as notificações do cliente autenticado
+ *     parameters:
+ *       - name: page
+ *         description: Número da página
+ *         in: query
+ *         type: integer
+ *       - name: limit
+ *         description: Quantidade de registos por página
+ *         in: query
+ *         type: integer
+ *       - name: is_read
+ *         description: Filtrar por estado de leitura (true/false)
+ *         in: query
+ *         type: boolean
+ *     responses:
+ *       200:
+ *         description: Lista de notificações do cliente recuperada com sucesso
+ *         example:
+ *           data:
+ *             - id: 1
+ *               title: "Pedido Confirmado"
+ *               message: "Seu pedido #175 foi recebido e está sendo preparado."
+ *               type: "order"
+ *               is_read: false
+ *               created_at: "2023-01-01T12:00:00.000Z"
+ *             - id: 2
+ *               title: "Atualização de Pedido"
+ *               message: "Seu pedido #175 foi atualizado para SHIPPED"
+ *               type: "order_status_update"
+ *               is_read: true
+ *               created_at: "2023-01-02T10:30:00.000Z"
+ *       401:
+ *         description: Não autorizado
+ *       403:
+ *         description: Acesso negado (apenas para clientes)
+ */
