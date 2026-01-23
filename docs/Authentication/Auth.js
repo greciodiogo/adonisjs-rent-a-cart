@@ -149,9 +149,9 @@
  *               type: string
  *             email:
  *               type: string
- *             firstName:
+ *             first_name:
  *               type: string
- *             lastName:
+ *             last_name:
  *               type: string
  *       401:
  *         description: Não autorizado

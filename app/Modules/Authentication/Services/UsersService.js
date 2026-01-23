@@ -13,7 +13,7 @@
         typeOrderBy: "DESC",
       };
 
-      const selectColumn = '"id", "firstName", "lastName", "email", "role", "registered" as created_at';
+      const selectColumn = '"id", "first_name", "last_name", "email", "role" as created_at';
 
       let query = new UsersRepository()
         .findAll(options.search, options, selectColumn) 
@@ -38,14 +38,14 @@
      * @returns
      */
     async findUsersById(Id) {
-      const selectColumn = '"id", "firstName", "lastName", "email", "role", "registered" as created_at';
+      const selectColumn = '"id", "first_name", "last_name", "email", "role", created_at';
       return await new UsersRepository().findById(Id, selectColumn) 
         //.where('is_deleted', 0)
         .first();
     }
 
     async findUsersByEmail(Email, role = null) {
-      const selectColumn = '"id", "firstName", "lastName", "email", "role", "registered" as created_at';
+      const selectColumn = '"id", "first_name", "last_name", "email", "role", created_at';
       return await new UsersRepository().findAll(null, {}, selectColumn) 
        .where(function () {
           if (role === 'sales') {

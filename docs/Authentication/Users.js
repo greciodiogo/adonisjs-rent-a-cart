@@ -39,9 +39,9 @@
  *                     type: string
  *                   email:
  *                     type: string
- *                   firstName:
+ *                   first_name:
  *                     type: string
- *                   lastName:
+ *                   last_name:
  *                     type: string
  *       401:
  *         description: Não autorizado
@@ -66,8 +66,8 @@
  *             - username
  *             - email
  *             - password
- *             - firstName
- *             - lastName
+ *             - first_name
+ *             - last_name
  *           properties:
  *             username:
  *               type: string
@@ -77,9 +77,9 @@
  *             password:
  *               type: string
  *               format: password
- *             firstName:
+ *             first_name:
  *               type: string
- *             lastName:
+ *             last_name:
  *               type: string
  *     responses:
  *       201:
@@ -139,9 +139,9 @@
  *               type: string
  *             email:
  *               type: string
- *             firstName:
+ *             first_name:
  *               type: string
- *             lastName:
+ *             last_name:
  *               type: string
  *     responses:
  *       200:

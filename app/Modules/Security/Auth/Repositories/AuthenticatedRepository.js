@@ -37,8 +37,8 @@ class AuthenticatedRepository {
 
       await this.authenticacao({
         email:newUser.email,
-        firstName:requestPayload.firstName,
-        lastName:requestPayload.lastName,
+        first_name:requestPayload.first_name,
+        last_name:requestPayload.last_name,
         password:requestPayload.password,
         role: "customer"
       }, auth, response)

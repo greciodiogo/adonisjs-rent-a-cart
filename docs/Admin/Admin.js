@@ -316,8 +316,8 @@
  *         example:
  *           data:
  *             id: 189
- *             firstName: "João"
- *             lastName: "Silva"
+ *             first_name: "João"
+ *             last_name: "Silva"
  *             email: "joao@example.com"
  *             phone: "+244912345678"
  *             role: "customer"
