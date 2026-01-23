@@ -25,6 +25,31 @@
      * @param {*} Payload
      * @returns
      */
+
+     generateUsernameAndPassword(company_name) {
+    // Pegando a primeira palavra do nome da empresa (em minúsculas)
+    const firstWord = company_name.split(' ')[0].toLowerCase();
+    
+    // Gerando username e password
+    const username = `${firstWord}.rentals`;
+    const password = `rentals@${firstWord}`;
+    const first_name = firstWord.charAt(0).toUpperCase() + firstWord.slice(1);
+    
+    return { first_name, username, password };
+  }
+
+  async generateDefaultUSer(CompanyName, trx = null) {
+    const { first_name, username, password } = this.generateUsernameAndPassword(CompanyName);
+    const userPayload = {
+      first_name,
+      username,
+      password,
+      role: 'PARTNER',
+    };
+
+    return await new UsersRepository().create(userPayload, trx);  
+  }
+
     async createUser(ModelPayload) {
       return await new UsersRepository().create({
         ...ModelPayload

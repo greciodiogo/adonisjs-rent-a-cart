@@ -4,11 +4,11 @@
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
-const ShopService = use('App/Modules/Catalog/Services/ShopService')
+const PartnerService = use('App/Modules/Catalog/Services/PartnerService')
 /**
  * Resourceful controller for interacting with icttrunkouts
  */
-class ShopController{
+class PartnerController{
   /**
    * Show a list of all icttrunkouts.
    * GET icttrunkouts
@@ -20,7 +20,7 @@ class ShopController{
    */
   async index ({ request, response,  }) { 
     const filters = request;
-    const data = await new ShopService().findAllShops(filters);
+    const data = await new PartnerService().findAllPartners(filters);
     return response.ok(data);
   } 
   /**
@@ -34,7 +34,7 @@ class ShopController{
   async store ({ request, response, auth }) {
     const ModelPayload = request.all();
     const UserId = auth.user.id;
-    const data = await new ShopService().createdShops({...ModelPayload}, UserId);
+    const data = await new PartnerService().createPartnerWithDefaultUser({...ModelPayload}, UserId);
     return response.created(data, {message: "Registo efectuado com sucesso"});
   }
 
@@ -49,7 +49,7 @@ class ShopController{
    */
   async show ({ params, response  }) {
     const Id = params.id;
-    const data = await new ShopService().findShopById(Id);
+    const data = await new PartnerService().findPartnerById(Id);
     return response.ok(data);
   }
 
@@ -64,7 +64,7 @@ class ShopController{
   async update ({ params, request, response }) {
     const ModelPayload = request.all();
     const Id = params.id;
-    const data = await new ShopService().updatedShop(Id, ModelPayload);
+    const data = await new PartnerService().updatedPartner(Id, ModelPayload);
     return response.ok(data, {message: "Registo actualizado com sucesso"});
   }
 
@@ -78,10 +78,10 @@ class ShopController{
    */
   async destroy ({ params, response }) { 
     const Id = params.id;
-    const data = await new ShopService().deleteTemporarilyShop(Id);
+    const data = await new PartnerService().deleteTemporarilyPartner(Id);
     return response.ok(data, {message: "Registo excluido com sucesso"});
   }
 }
 
-module.exports = ShopController
+module.exports = PartnerController
     

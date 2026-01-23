@@ -5,8 +5,8 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 const ProductsService = use('App/Modules/Catalog/Services/ProductsService')
-const ShopService = use('App/Modules/Catalog/Services/ShopService')
-const ShopOrderService = use('App/Modules/Sales/Services/ShopOrderService')
+const PartnerService = use('App/Modules/Catalog/Services/PartnerService')
+const PartnerOrderService = use('App/Modules/Sales/Services/PartnerOrderService')
 const OrderService = use('App/Modules/Sales/Services/OrderService')
 const AuthenticatedRepository = use('App/Modules/Security/Auth/Repositories/AuthenticatedRepository')
 const User = use('App/Modules/Security/Users/Models/User')
@@ -20,46 +20,46 @@ const UsersService = use('App/Modules/Authentication/Services/UsersService')
  */
 class AdminController{
  
-  async getProductsByShop ({ request, response, auth  }) {
+  async getProductsByPartner ({ request, response, auth  }) {
     const filters = request;
     const UserId = auth.user.id;
-    const shop = await new ShopService().findShopByUserId(UserId)
-    const shopId = shop.id;
-    const data = await new ProductsService().getProductsByShop(filters, shopId);
+    const partner = await new PartnerService().findPartnerByUserId(UserId)
+    const partnerId = partner.id;
+    const data = await new ProductsService().getProductsByPartner(filters, partnerId);
     return response.ok(data);
   }
 
-  async getShopInfo ({ response, auth  }) {
+  async getPartnerInfo ({ response, auth  }) {
     const UserId = auth.user.id;
-    const shop = await new ShopService().findShopByUserId(UserId)
-    return response.ok(shop);
+    const partner = await new PartnerService().findPartnerByUserId(UserId)
+    return response.ok(partner);
   }
 
   async getClientInfo ({ response, auth  }) {
     const UserId = auth.user.id;
-    const shop = await new UsersService().getClientInfo(UserId)
-    return response.ok(shop);
+    const partner = await new UsersService().getClientInfo(UserId)
+    return response.ok(partner);
   }
 
-  async getAllOrdersByShop ({ request, response, auth  }) {
+  async getAllOrdersByPartner ({ request, response, auth  }) {
     const filters = request;
     const UserId = auth.user.id;
-    const shop = await new ShopService().findShopByUserId(UserId)
-    const shopId = shop.id;
+    const partner = await new PartnerService().findPartnerByUserId(UserId)
+    const partnerId = partner.id;
 
-    const data = await new ShopOrderService().getAllOrdersByShop(filters,shopId)
+    const data = await new PartnerOrderService().getAllOrdersByPartner(filters,partnerId)
     return response.ok(data);
   }
 
-  async getOrderByShop ({ params, request, response, auth  }) {
+  async getOrderByPartner ({ params, request, response, auth  }) {
     const filters = request;
     const UserId = auth.user.id;
     const OrderId = params.id
     
-    const shop = await new ShopService().findShopByUserId(UserId)
-    const shopId = shop.id;
+    const partner = await new PartnerService().findPartnerByUserId(UserId)
+    const partnerId = partner.id;
     
-    const data = await new ShopOrderService().getOrderByShop(OrderId, filters,shopId)
+    const data = await new PartnerOrderService().getOrderByPartner(OrderId, filters,partnerId)
     return response.ok(data);
   }
   
@@ -71,17 +71,17 @@ class AdminController{
     return response.ok(order);
   }
   
-  async acceptOrderByShop ({ params, response, auth }) {
+  async acceptOrderByPartner ({ params, response, auth }) {
     const UserId = auth.user.id;
     const OrderId = params.id
-    const data = await new ShopOrderService().acceptOrderByShop(OrderId, UserId);
+    const data = await new PartnerOrderService().acceptOrderByPartner(OrderId, UserId);
     return response.created(data, {message: "Pedido Aceite com sucesso"});
   }
   
-  async cancelOrderByShop ({ params, response, auth }) {
+  async cancelOrderByPartner ({ params, response, auth }) {
     const UserId = auth.user.id;
     const OrderId = params.id
-    const data = await new ShopOrderService().cancelOrderByShop(OrderId, UserId);
+    const data = await new PartnerOrderService().cancelOrderByPartner(OrderId, UserId);
     return response.created(data, {message: "Pedido Cancelado com sucesso"});
   }
   
@@ -111,14 +111,14 @@ class AdminController{
     const data = await new AuthenticatedRepository().authenticate(requestAndRole, auth, response);
     return data;
   }
-  
-  async getNotificationsByShop ({ request, response, auth  }) {
+
+  async getNotificationsByPartner ({ request, response, auth  }) {
   const filters = request;
   const UserId = auth.user.id;
   
-  const shop = await new ShopService().findShopByUserId(UserId)
+  const partner = await new PartnerService().findPartnerByUserId(UserId)
 
-  if(!shop){
+  if(!partner){
     throw new NotFoundException("Loja não encontrada");
   }
   

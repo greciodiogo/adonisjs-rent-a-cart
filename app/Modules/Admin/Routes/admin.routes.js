@@ -2,17 +2,17 @@
     module.exports = (ApiRoute, Route) =>
     // Protected routes
     ApiRoute(() => {
-      Route.get("/products/shop", "AdminController.getProductsByShop").middleware(['role:sales,admin']);
-      Route.get("/shop/info", "AdminController.getShopInfo").middleware(['role:sales,admin']);
-      Route.get("/shop/notifications", "AdminController.getNotificationsByShop").middleware(['role:sales']);
-      Route.get("/shop/orders", "AdminController.getAllOrdersByShop").middleware(['role:sales,admin,manager']);
-      Route.get("/shop/orders/:id", "AdminController.getOrderByShop").middleware(['role:sales,admin,manager']);
-      Route.post("/order/:id/acceptOrderByShop", "AdminController.acceptOrderByShop").middleware(['role:sales,admin,manager']);
-      Route.post("/order/:id/cancelOrderByShop", "AdminController.cancelOrderByShop").middleware(['role:sales,admin,manager']);
+      Route.get("/products/partner", "AdminController.getProductsByPartner").middleware(['role:PARTNER,ADMIN']);
+      Route.get("/partner/info", "AdminController.getPartnerInfo").middleware(['role:PARTNER,ADMIN']);
+      Route.get("/partner/notifications", "AdminController.getNotificationsByPartner").middleware(['role:PARTNER']);
+      Route.get("/partner/orders", "AdminController.getAllOrdersByPartner").middleware(['role:PARTNER,ADMIN,MANAGER']);
+      Route.get("/partner/orders/:id", "AdminController.getOrderByPartner").middleware(['role:PARTNER,ADMIN,MANAGER']);
+      Route.post("/order/:id/acceptOrderByPartner", "AdminController.acceptOrderByPartner").middleware(['role:PARTNER,ADMIN,MANAGER']);
+      Route.post("/order/:id/cancelOrderByPartner", "AdminController.cancelOrderByPartner").middleware(['role:PARTNER,ADMIN,MANAGER']);
       
-      Route.get("/client/orders", "AdminController.findAllOrderByClient").middleware(['role:customer'])
-      Route.get("/client/info", "AdminController.getClientInfo").middleware(['role:customer']);
-      Route.get("/client/notifications", "AdminController.getNotificationsByUser").middleware(['role:customer']);
+      Route.get("/client/orders", "AdminController.findAllOrderByClient").middleware(['role:CUSTOMER'])
+      Route.get("/client/info", "AdminController.getClientInfo").middleware(['role:CUSTOMER']);
+      Route.get("/client/notifications", "AdminController.getNotificationsByUser").middleware(['role:CUSTOMER']);
 
     }, 'admin').namespace("App/Modules/Admin/Controllers").middleware(["auth"]);
     

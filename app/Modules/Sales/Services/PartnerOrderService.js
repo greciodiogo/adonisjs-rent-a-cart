@@ -1,75 +1,75 @@
 
 'use strict'
   const Database = use("Database");
-  const ShopService = use('App/Modules/Catalog/Services/ShopService')
+  const PartnerService = use('App/Modules/Catalog/Services/PartnerService')
   const OrderService = use('App/Modules/Sales/Services/OrderService')
-  const ShopOrderRepository = use("App/Modules/Sales/Repositories/ShopOrderRepository");
-  const ShopOrderItemRepository = use("App/Modules/Sales/Repositories/ShopOrderItemRepository");
+  const PartnerOrderRepository = use("App/Modules/Sales/Repositories/PartnerOrderRepository");
+  const PartnerOrderItemRepository = use("App/Modules/Sales/Repositories/PartnerOrderItemRepository");
 
 
-    class ShopOrderService{
+    class PartnerOrderService{
         
     constructor(){}
 
-    async getAllOrdersByShop(filters, ShopId) {
-      const selectColumn = `shop_orders.*, orders."fullName", orders."contactEmail"`;
+    async getAllOrdersByPartner(filters, PartnerId) {
+      const selectColumn = `partner_orders.*, orders."fullName", orders."contactEmail"`;
       const search = filters.input("search");
       const options = {
         page: filters.input("page") || 1,
         perPage: filters.input("perPage") || 10,
-        orderBy: filters.input("orderBy") || "shop_orders.id",
+        orderBy: filters.input("orderBy") || "partner_orders.id",
         typeOrderBy: filters.input("typeOrderBy") || "DESC",
         status: filters.input("status") || "",
         searchBy: ["status"],
         isPaginate: true
       };  
 
-      let query = new ShopOrderRepository()
+      let query = new PartnerOrderRepository()
         .findAll(search, options, selectColumn) 
-        .innerJoin("orders", "orders.id", "shop_orders.order_id")
+        .innerJoin("orders", "orders.id", "partner_orders.order_id")
         .where(function () {
           if (options.status ) {
             if (options.status == 'LOADING') {
-              this.where('shop_orders.status', 'accepted');
+              this.where('partner_orders.status', 'accepted');
               } else if(options.status == 'CONFIRMED'){
-              this.where('orders.status', 'delivered').orWhere('shop_orders.status', 'confirmed');
+              this.where('orders.status', 'delivered').orWhere('partner_orders.status', 'confirmed');
               } else {
-                this.where('shop_orders.status', 'PENDING');
+                this.where('partner_orders.status', 'PENDING');
               }
             }
-        }).where('shop_id', ShopId)
+        }).where('partner_id', PartnerId)
         // .whereIn('order_id', Database.select('id').from('orders').where("id", "orders.id"))
       return query.paginate(options.page, options.perPage || 10);
     }
 
-    async getOrderByShop(OrderId, filters, ShopId) {
+    async getOrderByPartner(OrderId, filters, PartnerId) {
         const selectColumn =
-      `shop_orders.id, shop_orders.order_id, shop_orders.shop_id, shop_orders.status, shop_orders.total_amount, shop_orders.created_at, shop_orders.updated_at, orders."fullName" ,orders."contactEmail"`;
+      `partner_orders.id, partner_orders.order_id, partner_orders.partner_id, partner_orders.status, partner_orders.total_amount, partner_orders.created_at, partner_orders.updated_at, orders."fullName" ,orders."contactEmail"`;
       const search = filters.input("search");
       const options = {
         page: filters.input("page") || 1,
         perPage: filters.input("perPage") || 10,
-        orderBy: filters.input("orderBy") || "shop_orders.id",
+        orderBy: filters.input("orderBy") || "partner_orders.id",
         typeOrderBy: filters.input("typeOrderBy") || "DESC",
         status: filters.input("status") || "",
         searchBy: ["status"],
         isPaginate: true
       };  
       
-      let query = new ShopOrderRepository()
+      let query = new PartnerOrderRepository()
         .findAll(search, options, selectColumn) 
-        .innerJoin("orders", "orders.id", "shop_orders.order_id")
+        .innerJoin("orders", "orders.id", "partner_orders.order_id")
         .where(function () {
           if (options.status ) {
             if (options.status == 'LOADING') {
-              this.where('shop_orders.status', 'accepted');
+              this.where('partner_orders.status', 'accepted');
               } else if(options.status == 'CONFIRMED'){
-              this.where('shop_orders.status', 'delivered');
+              this.where('partner_orders.status', 'delivered');
               } else {
-              this.where('shop_orders.status', options.status);
+              this.where('partner_orders.status', options.status);
               }
           }
-        }).where('shop_id', ShopId)
+        }).where('partner_id', PartnerId)
         .where('order_id', OrderId)
         // .whereIn('order_id', Database.select('id').from('orders').where("id", OrderId))
         .with('orderItems')
@@ -81,55 +81,55 @@
      * @param {*} Payload
      * @returns
      */
-    async createdShopOrders(ModelPayload) {
-      return await new ShopOrderRepository().create({
+    async createdPartnerOrders(ModelPayload) {
+      return await new PartnerOrderRepository().create({
         ...ModelPayload
       });  
     }
 
     static async createFromOrderItems (orderId, orderItems) {
-    const grouped = this.groupByShop(orderItems)
+    const grouped = this.groupByPartner(orderItems)
 
-    for (const shopId in grouped) {
-      const items = grouped[shopId]
+    for (const partnerId in grouped) {
+      const items = grouped[partnerId]
 
       const total = items.reduce((sum, i) => {
         return sum + Number(i.price) * Number(i.quantity)
       }, 0)
 
-      const shopOrder = await new ShopOrderRepository().create({
+      const partnerOrder = await new PartnerOrderRepository().create({
         order_id: orderId,
-        shop_id: shopId,
+        partner_id: partnerId,
         status: 'PENDING',
         total_amount: total
       })
 
-      await this.attachItems(shopOrder.id, items)
+      await this.attachItems(partnerOrder.id, items)
     }
   }
 
-   static groupByShop (items) {
+   static groupByPartner (items) {
     return items.reduce((acc, item) => {
-      acc[item.shopId] = acc[item.shopId] || []
-      acc[item.shopId].push(item)
+      acc[item.partnerId] = acc[item.partnerId] || []
+      acc[item.partnerId].push(item)
       return acc
     }, {})
   }
 
-  static async attachItems (shopOrderId, items) {
+  static async attachItems (partnerOrderId, items) {
     for (const item of items) {
-      await new ShopOrderItemRepository().create({
-        shop_order_id: shopOrderId,
+      await new PartnerOrderItemRepository().create({
+        partner_order_id: partnerOrderId,
         order_item_id: item.id
       })
     }
   }
 
-    async acceptOrderByShop(OrderId, UserId) {
+    async acceptOrderByPartner(OrderId, UserId) {
       return await this.updateOrderStatus(OrderId, 'accepted', UserId);
     }
 
-    async cancelOrderByShop(OrderId, UserId) {
+    async cancelOrderByPartner(OrderId, UserId) {
       return await this.updateOrderStatus(OrderId, 'canceled', UserId);  
     }
 
@@ -139,14 +139,14 @@
       const order = await new OrderService().findOrderById(OrderId);
       if(!order) throw new NotFoundException("Pedido não foi encontrado.");
       
-      const shop = await new ShopService().findShopByUserId(UserId);
-      if(!shop) throw new NotForbiddenException();
+      const partner = await new PartnerService().findPartnerByUserId(UserId);
+      if(!partner) throw new NotForbiddenException();
 
-      const shopOrder =  await this.findShopOrderByOrderId(OrderId);
-      if(!shopOrder) throw new NotFoundException("Pedido da loja não foi encontrado.");
+      const partnerOrder =  await this.findPartnerOrderByOrderId(OrderId);
+      if(!partnerOrder) throw new NotFoundException("Pedido da loja não foi encontrado.");
 
-      return await new ShopOrderRepository().update(
-        shopOrder.id,
+      return await new PartnerOrderRepository().update(
+        partnerOrder.id,
         {
         status: Status,
       });  
@@ -157,14 +157,14 @@
      * @param {*} Id
      * @returns
      */
-    async findShopOrderById(Id) {
-      return await new ShopOrderRepository().findById(Id) 
+    async findPartnerOrderById(Id) {
+      return await new PartnerOrderRepository().findById(Id) 
         //.where('is_deleted', 0)
         .first();
     }
 
-    async findShopOrderByOrderId(OrderId) {
-      return await new ShopOrderRepository()
+    async findPartnerOrderByOrderId(OrderId) {
+      return await new PartnerOrderRepository()
         .findAll() 
         .where('order_id', OrderId).first()
         // .whereIn('order_id', Database.select('id').from('orders').where("id", "orders.id"))
@@ -176,8 +176,8 @@
      * @param {*} Id
      * @returns
      */
-    async updatedShopOrder(Id, ModelPayload) {
-      return await new ShopOrderRepository().update(Id, ModelPayload);
+    async updatedPartnerOrder(Id, ModelPayload) {
+      return await new PartnerOrderRepository().update(Id, ModelPayload);
     } 
   
     /**
@@ -186,8 +186,8 @@
      * @param {*} Id 
      * @returns 
      */
-    async deleteTemporarilyShopOrder(Id) {
-      return await new ShopOrderRepository().delete(Id); 
+    async deleteTemporarilyPartnerOrder(Id) {
+      return await new PartnerOrderRepository().delete(Id); 
     }
 
     /**
@@ -196,8 +196,8 @@
      * @param {*} Id 
      * @returns 
     */
-    async deleteDefinitiveShopOrder(Id) {
-      return await new ShopOrderRepository().deleteDefinitive(Id); 
+    async deleteDefinitivePartnerOrder(Id) {
+      return await new PartnerOrderRepository().deleteDefinitive(Id); 
     }
 
     /**
@@ -206,17 +206,17 @@
      * @param {*} Payload 
      * @returns 
      */ 
-    async findAllShopOrdersTrash(filters) {
+    async findAllPartnerOrdersTrash(filters) {
         const options = {
-        ...new ShopOrderRepository().setOptions(filters),
+        ...new PartnerOrderRepository().setOptions(filters),
         typeOrderBy: "DESC",
         };
-        let query = new ShopOrderRepository()
+        let query = new PartnerOrderRepository()
         .findTrash(options.search, options) 
         .where(function () {})//.where('is_deleted', 1)
         return query.paginate(options.page, options.perPage || 10);
     }
     
     }
-    module.exports = ShopOrderService
+    module.exports = PartnerOrderService
     
