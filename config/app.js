@@ -16,7 +16,7 @@ module.exports = {
   |
   */
 
-  name: Env.get('APP_NAME', 'ENCONTRAR'),
+  name: Env.get('APP_NAME', 'RENTACAR'),
 
   /*
   |--------------------------------------------------------------------------

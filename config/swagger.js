@@ -15,7 +15,7 @@ module.exports = {
   options: {
     swaggerDefinition: {
       info: {
-        title: 'API ENCONTRAR',
+        title: 'API RENTACART',
         version: '1.0.0',
       },
 

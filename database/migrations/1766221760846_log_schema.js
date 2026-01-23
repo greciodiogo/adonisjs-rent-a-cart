@@ -15,6 +15,7 @@ class LogSchema extends Schema {
       table.string('message')
       table.boolean('success')
       table.text('url')
+      table.text('user_data').after('user')
       table.text('old_data')
       table.text('new_data')
       table.boolean('is_deleted').notNullable().defaultTo(false)
