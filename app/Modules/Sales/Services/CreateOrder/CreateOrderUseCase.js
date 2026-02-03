@@ -1,6 +1,6 @@
 const Database = use('Database')
 const OrderFactory = use('App/Modules/Sales/Services/CreateOrder/OrderFactory')
-const ShopOrderFactory = use('App/Modules/Sales/Services/CreateOrder/ShopOrderFactory')
+const PartnerOrderFactory = use('App/Modules/Sales/Services/CreateOrder/PartnerOrderFactory')
 const NotCreatedException = use("App/Exceptions/NotCreatedException");
 
 class CreateOrderUseCase {
@@ -11,7 +11,7 @@ class CreateOrderUseCase {
       const order = await new OrderFactory().create(orderData, userId, trx)
       if(!order) throw new NotCreatedException("Pedido Não foi criado");
 
-      await new ShopOrderFactory().createFromOrder(order, trx)
+      await new PartnerOrderFactory().createFromOrder(order, trx)
       
       await trx.commit()
       return order

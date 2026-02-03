@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/admin/products/shop:
+ * /api/admin/products/partner:
  *   get:
  *     security:
  *       - bearerAuth: []
@@ -40,7 +40,7 @@
 
 /**
  * @swagger
- * /api/admin/shop/info:
+ * /api/admin/partner/info:
  *   get:
  *     security:
  *       - bearerAuth: []
@@ -64,7 +64,7 @@
 
 /**
  * @swagger
- * /api/admin/shop/orders:
+ * /api/admin/partner/orders:
  *   get:
  *     security:
  *       - bearerAuth: []
@@ -104,7 +104,7 @@
 
 /**
  * @swagger
- * /api/admin/order/{id}/acceptOrderByShop:
+ * /api/admin/order/{id}/acceptOrderByPartner:
  *   post:
  *     security:
  *       - bearerAuth: []
@@ -133,7 +133,7 @@
 
 /**
  * @swagger
- * /api/admin/order/{id}/cancelOrderByShop:
+ * /api/admin/order/{id}/cancelOrderByPartner:
  *   post:
  *     security:
  *       - bearerAuth: []
@@ -193,7 +193,7 @@
 
 /**
  * @swagger
- * /api/admin/shop/orders/{id}:
+ * /api/admin/partner/orders/{id}:
  *   get:
  *     security:
  *       - bearerAuth: []
@@ -231,7 +231,7 @@
 
 /**
  * @swagger
- * /api/shop/auth/login:
+ * /api/partner/auth/login:
  *   post:
  *     tags:
  *       - Admin
@@ -265,7 +265,7 @@
 
 /**
  * @swagger
- * /api/admin/shop/notifications:
+ * /api/admin/partner/notifications:
  *   get:
  *     security:
  *       - bearerAuth: []

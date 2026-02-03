@@ -9,8 +9,8 @@ class Products extends Model {
     this.addTrait("@provider:Auditable");
   }
 
-  shop() {
-    return this.belongsTo('App/Modules/Catalog/Models/Shops', 'shopId', 'id')
+  partner() {
+    return this.belongsTo('App/Modules/Catalog/Models/Partners', 'partnerId', 'id')
   }
 
   /**

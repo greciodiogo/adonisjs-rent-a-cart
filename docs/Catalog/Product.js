@@ -222,7 +222,7 @@
 
 /**
  * @swagger
- * /api/products/{id}/shops:
+ * /api/products/{id}/partners:
  *   get:
  *     security:
  *     - bearerAuth: []
@@ -261,7 +261,7 @@
  *               description: "Latest iPhone model"
  *               price: 999.99
  *               category_id: 1
- *               shop_id: 1
+ *               partner_id: 1
  *       401:
  *         description: Não autorizado
  *       404:

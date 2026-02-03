@@ -1,11 +1,11 @@
 /**
  * @swagger
- * /api/shops:
+ * /api/partners:
  *   get:
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Shops
+ *       - Partners
  *     summary: Listar todas as lojas
  *     parameters:
  *       - name: page
@@ -39,12 +39,12 @@
 
 /**
  * @swagger
- * /api/shops:
+ * /api/partners:
  *   post:
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Shops
+ *       - Partners
  *     summary: Criar nova loja
  *     parameters:
  *       - name: body
@@ -80,12 +80,12 @@
 
 /**
  * @swagger
- * /api/shops/{id}:
+ * /api/partners/{id}:
  *   get:
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Shops
+ *       - Partners
  *     summary: Obter detalhes de uma loja com seus produtos
  *     parameters:
  *       - name: id
@@ -111,12 +111,12 @@
 
 /**
  * @swagger
- * /api/shops/{id}:
+ * /api/partners/{id}:
  *   put:
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Shops
+ *       - Partners
  *     summary: Atualizar loja
  *     parameters:
  *       - name: id
@@ -149,12 +149,12 @@
 
 /**
  * @swagger
- * /api/shops/{id}:
+ * /api/partners/{id}:
  *   delete:
  *     security:
  *       - bearerAuth: []
  *     tags:
- *       - Shops
+ *       - Partners
  *     summary: Eliminar loja
  *     parameters:
  *       - name: id

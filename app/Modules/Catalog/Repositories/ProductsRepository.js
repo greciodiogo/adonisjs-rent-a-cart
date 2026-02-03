@@ -7,8 +7,8 @@
       super("Product", "App/Modules/Catalog/Models/")
     } 
 
-    findProductsByShopId(ShopId) {
-      return this.model.query().where('shopId', ShopId).where('is_deleted', 0);
+    findProductsByPartnerId(PartnerId) {
+      return this.model.query().where('partnerId', PartnerId).where('is_deleted', 0);
     }    
     
     }    

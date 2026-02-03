@@ -1,7 +1,7 @@
 'use strict'
 
 const Firebase = require('../../config/firebase')
-const ShopService = use('App/Modules/Catalog/Services/ShopService')
+const PartnerService = use('App/Modules/Catalog/Services/PartnerService')
 const UsersService = use('App/Modules/Authentication/Services/UsersService')
 const Database = use("Database");
 
@@ -10,7 +10,7 @@ const Database = use("Database");
 class FirebaseService {
   /**
    * Envia notificação quando um novo pedido é criado
-   * Notifica tanto o cliente quanto os parceiros (shops)
+   * Notifica tanto o cliente quanto os parceiros (partners)
    */
   async notifyNewOrder(order, orderItems) {
     try {
@@ -34,39 +34,39 @@ class FirebaseService {
 
       await this.notifyUser(customer.id, customerNotification, customerData)
 
-      // Otimizar: Buscar todos os shopIds em uma única query
+      // Otimizar: Buscar todos os partnerIds em uma única query
       if (orderItems && orderItems.length > 0) {
         const productIds = orderItems.map(item => item.product_id)
         
-        // Uma única query para pegar todos os shops
-        const shopProducts = await Database
+        // Uma única query para pegar todos os partners
+        const partnerProducts = await Database
           .table('products')
           .whereIn('id', productIds)
-          .distinct('shopId')
-          .select('shopId')
+          .distinct('partnerId')
+          .select('partnerId')
         
-        // Extrair shopIds únicos
-        const shopIds = [...new Set(shopProducts.map(p => p.shopId).filter(id => id))]
+        // Extrair partnerIds únicos
+        const partnerIds = [...new Set(partnerProducts.map(p => p.partnerId).filter(id => id))]
 
-        // Notificar para cada shop em paralelo
+        // Notificar para cada partner em paralelo
         await Promise.all(
-          shopIds.map(async (shopId) => {
+          partnerIds.map(async (partnerId) => {
             try {
-              const shopNotification = {
+              const partnerNotification = {
                 title: 'Novo Pedido',
                 body: `Você recebeu um novo pedido #${order.id}`
               }
 
-        const shopData = {
-          type: 'new_order_shop',
+        const partnerData = {
+          type: 'new_order_partner',
           orderId: order.id.toString(),
           customerId: order.userId.toString(),
           orderStatus: order.status || 'PENDING'
         }
 
-        await this.notifyShopUsers(shopId, shopNotification, shopData)
+        await this.notifyPartnerUsers(partnerId, partnerNotification, partnerData)
             } catch (error) {
-              console.error(`Error notifying shop ${shopId}:`, error.message)
+              console.error(`Error notifying partner ${partnerId}:`, error.message)
             }
           })
         )
@@ -104,19 +104,19 @@ class FirebaseService {
   /**
    * Envia notificação para todos os usuários de uma loja
    */
-  async notifyShopUsers(shopId, notification, data = {}) {
+  async notifyPartnerUsers(partnerId, notification, data = {}) {
     try {
       // Buscar todos os usuários que trabalham na loja
-      const shopUsers = await Database.table('shops').innerJoin('users', 'users.id', 'shops.userId')
-        .where('shops.id', shopId)
+      const partnerUsers = await Database.table('partners').innerJoin('users', 'users.id', 'partners.userId')
+        .where('partners.id', partnerId)
         .where('users.role', 'sales')
         .select('users.id')
 
-      for (const user of shopUsers) {
+      for (const user of partnerUsers) {
         await this.notifyUser(user.id, notification, data)
       }
     } catch (error) {
-      console.error('Error notifying shop users:', error.message)
+      console.error('Error notifying partner users:', error.message)
     }
   }
 

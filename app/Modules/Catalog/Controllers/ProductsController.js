@@ -60,10 +60,10 @@ class ProductsController{
     return response.ok(data);
   } 
 
-  async getProductsByShop ({ params, request, response }) {
+  async getProductsByPartner ({ params, request, response }) {
     const filters = request;
-    const shopId = params.id;
-    const data = await new ProductsService().getProductsByShop(filters, shopId);
+    const partnerId = params.id;
+    const data = await new ProductsService().getProductsByPartner(filters, partnerId);
     return response.ok(data);
   }
 

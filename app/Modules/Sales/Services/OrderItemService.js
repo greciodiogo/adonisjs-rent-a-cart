@@ -13,24 +13,24 @@ class OrderItemService {
         price: item.price
       }, null, false)
 
-      created.shopId = await this.resolveShop(item.product_id)
+      created.partnerId = await this.resolvePartner(item.product_id)
       createdItems.push(created)
     }
 
     return createdItems
   }
 
-  static async resolveShop (productId) {
-    const shopItem = await Database
-      .from('shop_items')
+  static async resolvePartner (productId) {
+    const partnerItem = await Database
+      .from('partner_items')
       .where('productId', productId)
       .first()
 
-    if (!shopItem) {
+    if (!partnerItem) {
       throw new Error(`Produto ${productId} não pertence a nenhuma loja`)
     }
 
-    return shopItem.shopId
+    return partnerItem.partnerId
   }
 }
 

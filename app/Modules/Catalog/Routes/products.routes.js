@@ -9,8 +9,8 @@
   
   
   ApiRoute(() => {
-      Route.post("/", "ProductsController.store").middleware(['role:sales']);
-      Route.get("/:id/shops", "ProductsController.getProductsByShop").middleware(["auth"]);
+      Route.post("/", "ProductsController.store").middleware(['role:PARTNER']);
+      Route.get("/:id/partners", "ProductsController.getProductsByPartner").middleware(["auth"]);
       Route.put("/:id", "ProductsController.update").middleware(["auth"]);
       Route.delete("/:id", "ProductsController.destroy").middleware(["auth"]);
     }, 'products').namespace("App/Modules/Catalog/Controllers").middleware(["auth"]);

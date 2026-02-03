@@ -2,7 +2,7 @@
     'use strict'
     const Database = use("Database");
     const ProductsRepository = use("App/Modules/Catalog/Repositories/ProductsRepository");
-    const ShopService = use('App/Modules/Catalog/Services/ShopService')
+    const PartnerService = use('App/Modules/Catalog/Services/PartnerService')
 
     class ProductsService{
         
@@ -54,14 +54,14 @@
      * @returns
     */
    async createdProduct(ModelPayload, UserId) {
-     const shop = await new ShopService().findShopByUserId(UserId)
-     const ShopId = shop.id;
+     const partner = await new PartnerService().findPartnerByUserId(UserId)
+     const PartnerId = partner.id;
      const purchasePrice = ModelPayload.purchasePrice;
      const price = Math.round(ModelPayload.price) || await this.calculatePrice(purchasePrice)
      return await new ProductsRepository().create({
        ...ModelPayload,
        price: price,
-       shopId: ShopId,
+       partnerId: PartnerId,
       });  
     }
     
@@ -86,7 +86,7 @@
      .first();
     }
 
-    async getProductsByShop(filters, ShopId) {
+    async getProductsByPartner(filters, PartnerId) {
 
       const search = filters.input("search");
       const options = {
@@ -101,7 +101,7 @@
       let query = new ProductsRepository()
         .findAll(search, options) 
         .where(function () {})
-        .where('shopId', ShopId)
+        .where('partnerId', PartnerId)
         .where('is_deleted', 0)
       return query.paginate(options.page, options.perPage || 10);
     }
